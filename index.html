@@ -1,331 +1,469 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Grades / Marks Page</title>
-
+<meta charset="utf-8" />
+<title>Grades / Marks Management — Sri Lanka Scale</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <style>
-    body {
-        margin: 0;
-        font-family: "Segoe UI", Arial, sans-serif;
-        background: linear-gradient(135deg, #6a11cb, #2575fc);
-        background-attachment: fixed;
-        padding: 30px 0;
+    :root{
+        --card-bg: rgba(255,255,255,0.95);
+        --accent: #4f46e5;
+        --accent-2: #06b6d4;
+        --muted:#6b7280;
+    }
+    html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;}
+    body{
+        background: radial-gradient(circle at 10% 10%, rgba(79,70,229,0.12), transparent 10%),
+                    linear-gradient(135deg,#0f172a 0%, #07133a 50%, #002b36 100%);
+        display:flex; align-items:center; justify-content:center; padding:28px;
     }
 
-    .container {
-        width: 90%;
-        max-width: 900px;
-        background: rgba(255,255,255,0.95);
-        padding: 30px;
-        margin: auto;
-        border-radius: 18px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-        backdrop-filter: blur(10px);
-        animation: fadeIn 0.7s ease-in-out;
+    .container{
+        width:100%;
+        max-width:1050px;
+        background:var(--card-bg);
+        border-radius:14px;
+        padding:22px;
+        box-shadow:0 12px 30px rgba(2,6,23,0.45);
+        border: 1px solid rgba(255,255,255,0.06);
     }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+    h1{font-size:20px; text-align:center; margin:0 0 16px; color:#0f172a;}
+    .top-row{display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:14px;}
+    .left-title{display:flex; gap:12px; align-items:center;}
+    .badge{background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:white;padding:8px 12px;border-radius:8px;font-weight:600; box-shadow:0 6px 18px rgba(99,102,241,0.12);}
+    .subtitle{color:var(--muted); font-size:13px;}
+
+    .form-grid{display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; margin-bottom:12px;}
+    .field{display:flex; flex-direction:column;}
+    label{font-weight:600; font-size:13px; color:#111827; margin-bottom:6px;}
+    input[type="text"], input[type="date"], input[type="number"], select {
+        padding:10px 12px; border-radius:8px; border:1px solid #e6e7ef; font-size:14px; outline:none;
+        background: #fff;
     }
+    input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-    h2 {
-        text-align: center;
-        margin-bottom: 25px;
-        color: #222;
-        font-size: 26px;
-        letter-spacing: 1px;
+    .controls {display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px;}
+    button.action{padding:10px 14px; border-radius:10px; border:0; color:white; cursor:pointer; font-weight:700; box-shadow:0 8px 18px rgba(2,6,23,0.12);}
+    .btn-primary{background:var(--accent);}
+    .btn-ghost{background:#6b7280;}
+    .btn-success{background:#16a34a;}
+    .btn-danger{background:#ef4444;}
+    .btn-info{background:#0ea5a4;}
+    .btn-small{padding:8px 10px; font-weight:600;}
+
+    .search-row{display:flex; gap:8px; margin-bottom:10px;}
+    .search-row input{flex:1;}
+
+    .table-wrap{overflow:auto; border-radius:10px; margin-top:8px; background:linear-gradient(#fff,#fbfdff); padding:8px; border:1px solid rgba(3,7,18,0.04);}
+    table{width:100%; border-collapse:collapse; min-width:800px;}
+    th, td {padding:10px 12px; text-align:center; border-bottom:1px solid #eef2ff;}
+    thead th {background: linear-gradient(90deg, rgba(79,70,229,0.95), rgba(6,182,212,0.95)); color:white; font-weight:700; border-bottom:2px solid rgba(0,0,0,0.06);}
+    tbody tr:hover {background: rgba(15,23,42,0.02); cursor:pointer;}
+    .selected {outline: 3px solid rgba(99,102,241,0.15); background: rgba(99,102,241,0.03) !important;}
+
+    .stats {display:flex; gap:16px; margin-top:12px; align-items:center; color:#0f172a; font-weight:700;}
+    .stat {background:#fff; padding:10px 12px; border-radius:10px; box-shadow:0 6px 18px rgba(2,6,23,0.04); border:1px solid rgba(2,6,23,0.02);}
+
+    /* popup filter and details */
+    .overlay {position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(2,6,23,0.45); z-index:80;}
+    .modal {background:#fff; padding:18px; width:340px; border-radius:12px; box-shadow:0 15px 40px rgba(2,6,23,0.4);}
+    .modal h3{margin:0 0 8px; font-size:16px;}
+    .modal .row{display:block; margin-bottom:10px;}
+    .small{font-size:13px; color:var(--muted); margin-bottom:8px;}
+
+    .footer-note{margin-top:14px; color:var(--muted); font-size:13px;}
+    @media (max-width:900px){
+        .form-grid{grid-template-columns:1fr;}
+        table{min-width:700px;}
     }
-
-    label {
-        font-weight: bold;
-        display: block;
-        margin-bottom: 5px;
-        color: #333;
-    }
-
-    input {
-        width: 100%;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #aaa;
-        margin-bottom: 15px;
-        font-size: 15px;
-    }
-
-    .row {
-        display: flex;
-        gap: 20px;
-    }
-
-    .row > div {
-        flex: 1;
-    }
-
-    button {
-        padding: 12px 20px;
-        border: none;
-        border-radius: 10px;
-        font-size: 15px;
-        cursor: pointer;
-        color: white;
-        transition: 0.25s ease;
-    }
-
-    button:hover {
-        transform: scale(1.06);
-        opacity: 0.9;
-    }
-
-    .blue { background: #007bff; }
-    .green { background: #28a745; }
-    .red { background: #dc3545; }
-    .gray { background: #6c757d; }
-    .purple { background: #6f42c1; }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-    }
-
-    th {
-        background: #444;
-        color: white;
-        padding: 12px;
-    }
-
-    td {
-        padding: 10px;
-        background: white;
-        border-bottom: 1px solid #ccc;
-    }
-
-    #filterBox {
-        display: none;
-        background: white;
-        border-radius: 12px;
-        width: 320px;
-        padding: 20px;
-        position: fixed;
-        top: 25%;
-        left: 40%;
-        box-shadow: 0 15px 40px rgba(0,0,0,0.35);
-        animation: pop 0.4s ease;
-    }
-
-    @keyframes pop {
-        from { transform: scale(0.8); opacity: 0; }
-        to { transform: scale(1); opacity: 1; }
-    }
-
 </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container" role="application" aria-label="Grades and marks system">
+    <div class="top-row">
+        <div class="left-title">
+            <div class="badge">Grades / Marks</div>
+            <div style="margin-left:8px;">
+                <div class="subtitle">Professional Student Grading — Sri Lanka scale</div>
+                <div style="font-size:12px;color:var(--muted)">Enter marks to auto-calc grade. Add, update, delete, filter, print.</div>
+            </div>
+        </div>
 
-<h2>Grades / Marks Page</h2>
+        <div style="display:flex; gap:8px; align-items:center;">
+            <button class="action btn-primary btn-small" onclick="printPage()">Print</button>
+            <button class="action btn-info btn-small" onclick="openFilter()">Filter</button>
+            <button class="action btn-ghost btn-small" onclick="showDetails()">Show Details</button>
+        </div>
+    </div>
 
-<div class="row">
-<div>
-<label>Student Name:</label>
-<input id="name">
+    <form id="recordForm" onsubmit="return false;">
+        <div class="form-grid" role="group" aria-label="student inputs">
+            <div class="field">
+                <label for="nameInput">Student Name</label>
+                <input id="nameInput" type="text" placeholder="e.g. John Perera" />
+            </div>
+
+            <div class="field">
+                <label for="idInput">Student ID</label>
+                <input id="idInput" type="text" placeholder="e.g. 2024-001" />
+            </div>
+
+            <div class="field">
+                <label for="classInput">Class</label>
+                <input id="classInput" type="text" placeholder="e.g. 10A" />
+            </div>
+
+            <div class="field">
+                <label for="dobInput">DOB</label>
+                <input id="dobInput" type="date" />
+            </div>
+
+            <div class="field">
+                <label for="subjectInput">Subject</label>
+                <input id="subjectInput" type="text" placeholder="e.g. Mathematics" />
+            </div>
+
+            <div class="field">
+                <label for="marksInput">Marks (0 - 100)</label>
+                <input id="marksInput" type="number" min="0" max="100" placeholder="Enter marks" />
+            </div>
+
+            <div class="field">
+                <label for="gradeInput">Grade (auto from marks)</label>
+                <input id="gradeInput" type="text" placeholder="A / B / C / S / F" readonly />
+            </div>
+        </div>
+
+        <div class="controls" role="group" aria-label="actions">
+            <button class="action btn-primary" onclick="addRecord()">Add Grade</button>
+            <button class="action btn-ghost" onclick="clearForm()">Clear</button>
+            <button class="action btn-success" onclick="updateRecord()">Update</button>
+            <button class="action btn-danger" onclick="deleteRecord()">Delete</button>
+
+            <div style="flex:1"></div>
+
+            <div class="search-row" style="flex:0 0 420px;">
+                <input id="searchInput" type="text" placeholder="Search by name..." />
+                <button class="action btn-primary" onclick="searchName()">Search</button>
+                <button class="action btn-ghost" onclick="resetSearch()">Reset</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="table-wrap" aria-live="polite">
+        <table id="gradesTable" role="grid" aria-label="Student grades table">
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Class</th>
+                    <th>DOB</th>
+                    <th>Subject</th>
+                    <th>Marks</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="stats" aria-hidden="false">
+        <div class="stat" id="avgStat">Average Grade: -</div>
+        <div class="stat" id="highStat">Highest Mark: -</div>
+        <div class="stat" id="lowStat">Lowest Mark: -</div>
+    </div>
+
+    <div class="footer-note">Grade scale: A (75–100), B (65–74), C (55–64), S (35–54), F (0–34)</div>
 </div>
 
-<div>
-<label>Student ID:</label>
-<input id="id">
-</div>
-</div>
-
-<div class="row">
-<div>
-<label>Class:</label>
-<input id="class">
-</div>
-
-<div>
-<label>DOB:</label>
-<input type="date" id="dob">
-</div>
-</div>
-
-<div class="row">
-<div>
-<label>Subject:</label>
-<input id="subject">
-</div>
-
-<div>
-<label>Grade:</label>
-<input id="grade">
-</div>
-</div>
-
-<button class="blue" onclick="addRecord()">Add Grade</button>
-<button class="gray" onclick="clearInputs()">Clear</button>
-<button class="green" onclick="updateRecord()">Update</button>
-<button class="red" onclick="deleteRecord()">Delete</button>
-<br><br>
-
-<input id="searchBox" placeholder="Search by student name" style="width:70%; padding:10px; border-radius:8px;">
-<button class="purple" onclick="searchName()">Search</button>
-
-<button class="blue" onclick="showAll()">Show All</button>
-<button class="gray" onclick="openFilter()">Filter</button>
-<button class="green" onclick="window.print()">Print</button>
-
-<table id="table">
-<thead>
-<tr>
-<th>Student ID</th>
-<th>Name</th>
-<th>Class</th>
-<th>DOB</th>
-<th>Subject</th>
-<th>Grade</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-
-<p id="stats"></p>
-
-</div>
-
-<!-- FILTER POPUP -->
-<div id="filterBox">
-<h3>Filter Options</h3>
-
-<label>Show Grade:</label>
-<select id="filterGrade" style="width:100%; padding:8px;">
-    <option value="">-- Select --</option>
-    <option>A</option>
-    <option>B</option>
-    <option>C</option>
-    <option>D</option>
-</select>
-
-<br><br>
-<button class="green" onclick="applyFilter()">Apply</button>
-<button class="red" onclick="closeFilter()">Close</button>
+<!-- overlay modal for filter and details -->
+<div id="overlay" class="overlay" role="dialog" aria-modal="true">
+    <div class="modal" id="modalContent" role="document">
+        <!-- content injected by JS -->
+    </div>
 </div>
 
 <script>
-let data = [
-    {id:"001", name:"John", class:"10A", dob:"2008-05-10", subject:"Math", grade:"A"},
-    {id:"002", name:"Mary", class:"10B", dob:"2008-09-20", subject:"Science", grade:"B+"}
+/* ======= Data and utilities ======= */
+/* initial sample data */
+let records = [
+    { id: "001", name: "John", cls: "10A", dob: "2008-05-10", subject: "Math", marks: 88, grade: "A" },
+    { id: "002", name: "Mary", cls: "10B", dob: "2008-09-20", subject: "Science", marks: 68, grade: "B" }
 ];
 
 let selectedIndex = -1;
-loadTable();
 
-function loadTable(list = data) {
-    let tbody = document.querySelector("#table tbody");
+/* Sri Lanka grading function (Option 2) */
+function marksToGrade(m) {
+    if (m === "" || m === null || isNaN(m)) return "";
+    m = Number(m);
+    if (m >= 75 && m <= 100) return "A";
+    if (m >= 65 && m <= 74) return "B";
+    if (m >= 55 && m <= 64) return "C";
+    if (m >= 35 && m <= 54) return "S";
+    if (m >= 0 && m <= 34) return "F";
+    return "";
+}
+
+/* mapping grade to numeric weight for average calculation (A highest) */
+const gradeWeight = { "A": 5, "B": 4, "C": 3, "S": 2, "F": 1 };
+
+/* ======= DOM elements ======= */
+const tbody = document.querySelector("#gradesTable tbody");
+const nameInput = document.getElementById("nameInput");
+const idInput = document.getElementById("idInput");
+const classInput = document.getElementById("classInput");
+const dobInput = document.getElementById("dobInput");
+const subjectInput = document.getElementById("subjectInput");
+const marksInput = document.getElementById("marksInput");
+const gradeInput = document.getElementById("gradeInput");
+const avgStat = document.getElementById("avgStat");
+const highStat = document.getElementById("highStat");
+const lowStat = document.getElementById("lowStat");
+const overlay = document.getElementById("overlay");
+const modalContent = document.getElementById("modalContent");
+const searchInput = document.getElementById("searchInput");
+
+/* ======= Sync grade when marks change ======= */
+marksInput.addEventListener("input", ()=> {
+    const g = marksToGrade(marksInput.value);
+    gradeInput.value = g;
+});
+
+/* ======= Render table ======= */
+function renderTable(list = records) {
     tbody.innerHTML = "";
-    list.forEach((d, i) => {
-        let row = `<tr onclick="selectRow(${i})">
-            <td>${d.id}</td>
-            <td>${d.name}</td>
-            <td>${d.class}</td>
-            <td>${d.dob}</td>
-            <td>${d.subject}</td>
-            <td>${d.grade}</td>
-        </tr>`;
-        tbody.innerHTML += row;
+    list.forEach((r, idx) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${escapeHTML(r.id)}</td>
+            <td>${escapeHTML(r.name)}</td>
+            <td>${escapeHTML(r.cls)}</td>
+            <td>${escapeHTML(r.dob)}</td>
+            <td>${escapeHTML(r.subject)}</td>
+            <td>${escapeHTML(String(r.marks))}</td>
+            <td>${escapeHTML(r.grade)}</td>
+        `;
+        tr.addEventListener("click", ()=> selectRow(idx, tr));
+        tbody.appendChild(tr);
     });
-
-    let grades = list.map(a => a.grade.charAt(0));
-    let avg = grades.reduce((a,b)=>a+b.charCodeAt(0),0)/grades.length;
-    let highest = grades.sort()[0];
-    let lowest = grades.sort()[grades.length-1];
-
-    document.getElementById("stats").innerHTML =
-        `Average Grade: ${String.fromCharCode(Math.round(avg))} 
-         | Highest: ${highest} 
-         | Lowest: ${lowest}`;
+    updateStats(list);
 }
 
+/* protect innerHTML from malicious content */
+function escapeHTML(s){
+    return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+}
+
+/* select a row */
+function selectRow(idx, trElement) {
+    // clear selection styling
+    [...tbody.children].forEach(tr => tr.classList.remove("selected"));
+    trElement.classList.add("selected");
+    selectedIndex = idx;
+    const r = records[idx];
+    idInput.value = r.id;
+    nameInput.value = r.name;
+    classInput.value = r.cls;
+    dobInput.value = r.dob;
+    subjectInput.value = r.subject;
+    marksInput.value = r.marks;
+    gradeInput.value = r.grade;
+}
+
+/* ======= CRUD operations ======= */
 function addRecord() {
-    let obj = {
-        id: id.value,
-        name: name.value,
-        class: class.value,
-        dob: dob.value,
-        subject: subject.value,
-        grade: grade.value
-    };
-    data.push(obj);
-    loadTable();
-    clearInputs();
-}
-
-function clearInputs() {
-    id.value = name.value = class.value = dob.value = subject.value = grade.value = "";
-    selectedIndex = -1;
-}
-
-function selectRow(i) {
-    selectedIndex = i;
-    let d = data[i];
-    id.value = d.id;
-    name.value = d.name;
-    class.value = d.class;
-    dob.value = d.dob;
-    subject.value = d.subject;
-    grade.value = d.grade;
+    const id = idInput.value.trim();
+    const name = nameInput.value.trim();
+    const cls = classInput.value.trim();
+    const dob = dobInput.value;
+    const subject = subjectInput.value.trim();
+    const marksVal = marksInput.value;
+    if (!id || !name || !cls || !dob || !subject) {
+        alert("Please fill ID, Name, Class, DOB and Subject.");
+        return;
+    }
+    const marks = marksVal !== "" ? Number(marksVal) : NaN;
+    if (isNaN(marks) || marks < 0 || marks > 100) {
+        alert("Please enter valid marks (0–100).");
+        return;
+    }
+    const grade = marksToGrade(marks);
+    records.push({ id, name, cls, dob, subject, marks, grade });
+    clearForm();
+    renderTable();
 }
 
 function updateRecord() {
-    if (selectedIndex < 0) return;
-    data[selectedIndex] = {
-        id: id.value,
-        name: name.value,
-        class: class.value,
-        dob: dob.value,
-        subject: subject.value,
-        grade: grade.value
-    };
-    loadTable();
+    if (selectedIndex < 0 || selectedIndex >= records.length) {
+        alert("Select a row to update.");
+        return;
+    }
+    const id = idInput.value.trim();
+    const name = nameInput.value.trim();
+    const cls = classInput.value.trim();
+    const dob = dobInput.value;
+    const subject = subjectInput.value.trim();
+    const marksVal = marksInput.value;
+    if (!id || !name || !cls || !dob || !subject) {
+        alert("Please fill ID, Name, Class, DOB and Subject.");
+        return;
+    }
+    const marks = marksVal !== "" ? Number(marksVal) : NaN;
+    if (isNaN(marks) || marks < 0 || marks > 100) {
+        alert("Please enter valid marks (0–100).");
+        return;
+    }
+    const grade = marksToGrade(marks);
+    records[selectedIndex] = { id, name, cls, dob, subject, marks, grade };
+    clearForm();
+    renderTable();
+    selectedIndex = -1;
 }
 
 function deleteRecord() {
-    if (selectedIndex < 0) return;
-    data.splice(selectedIndex, 1);
-    loadTable();
-    clearInputs();
+    if (selectedIndex < 0 || selectedIndex >= records.length) {
+        alert("Select a row to delete.");
+        return;
+    }
+    if (!confirm("Delete selected record?")) return;
+    records.splice(selectedIndex, 1);
+    clearForm();
+    renderTable();
+    selectedIndex = -1;
 }
 
+function clearForm() {
+    idInput.value = "";
+    nameInput.value = "";
+    classInput.value = "";
+    dobInput.value = "";
+    subjectInput.value = "";
+    marksInput.value = "";
+    gradeInput.value = "";
+    selectedIndex = -1;
+    [...tbody.children].forEach(tr => tr.classList.remove("selected"));
+}
+
+/* ======= Search and reset ======= */
 function searchName() {
-    let s = searchBox.value.toLowerCase();
-    let filtered = data.filter(d => d.name.toLowerCase().includes(s));
-    loadTable(filtered);
+    const q = searchInput.value.trim().toLowerCase();
+    if (!q) { renderTable(); return; }
+    const filtered = records.filter(r => r.name.toLowerCase().includes(q));
+    renderTable(filtered);
+}
+function resetSearch(){ searchInput.value = ""; renderTable(); }
+
+/* ======= Stats: average grade via marks -> grade mapping, highest and lowest marks ======= */
+function updateStats(list = records) {
+    if (!list || list.length === 0) {
+        avgStat.textContent = "Average Grade: -";
+        highStat.textContent = "Highest Mark: -";
+        lowStat.textContent = "Lowest Mark: -";
+        return;
+    }
+    // average marks, then convert to grade
+    const marksArr = list.map(r => Number(r.marks));
+    const avgMarks = Math.round(marksArr.reduce((a,b)=>a+b,0)/marksArr.length);
+    const avgGrade = marksToGrade(avgMarks);
+    avgStat.textContent = `Average Grade: ${avgGrade} (${avgMarks})`;
+    highStat.textContent = `Highest Mark: ${Math.max(...marksArr)}`;
+    lowStat.textContent = `Lowest Mark: ${Math.min(...marksArr)}`;
 }
 
-function showAll() {
-    loadTable(data);
-}
-
+/* ======= Filter modal ======= */
 function openFilter() {
-    filterBox.style.display = "block";
+    overlay.style.display = "flex";
+    modalContent.innerHTML = `
+        <h3>Filter Records</h3>
+        <div class="small">Choose one or more filters below. Leave blank for 'any'.</div>
+        <div class="row">
+            <label style="font-weight:600;margin-bottom:6px">Grade</label>
+            <select id="fGrade" style="width:100%;padding:8px;border-radius:6px;margin-bottom:8px">
+                <option value="">-- Any --</option>
+                <option>A</option><option>B</option><option>C</option><option>S</option><option>F</option>
+            </select>
+        </div>
+        <div class="row">
+            <label style="font-weight:600;margin-bottom:6px">Subject</label>
+            <input id="fSubject" type="text" placeholder="e.g. Math" style="width:100%;padding:8px;border-radius:6px;margin-bottom:8px"/>
+        </div>
+        <div class="row">
+            <label style="font-weight:600;margin-bottom:6px">Class</label>
+            <input id="fClass" type="text" placeholder="e.g. 10A" style="width:100%;padding:8px;border-radius:6px;margin-bottom:8px"/>
+        </div>
+        <div class="row">
+            <label style="font-weight:600;margin-bottom:6px">Marks between</label>
+            <div style="display:flex;gap:6px;">
+                <input id="fMin" type="number" min="0" max="100" placeholder="min" style="flex:1;padding:8px;border-radius:6px"/>
+                <input id="fMax" type="number" min="0" max="100" placeholder="max" style="flex:1;padding:8px;border-radius:6px"/>
+            </div>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px">
+            <button class="action btn-success" onclick="applyFilter()">Apply</button>
+            <button class="action btn-ghost" onclick="closeModal()">Cancel</button>
+        </div>
+    `;
 }
 
-function closeFilter() {
-    filterBox.style.display = "none";
-}
+function closeModal(){ overlay.style.display = "none"; modalContent.innerHTML = ""; }
 
 function applyFilter() {
-    let g = filterGrade.value;
-    let filtered = data.filter(d => d.grade.startsWith(g));
-    loadTable(filtered);
-    closeFilter();
-}
-</script>
+    const g = document.getElementById("fGrade").value;
+    const subj = document.getElementById("fSubject").value.trim().toLowerCase();
+    const cls = document.getElementById("fClass").value.trim().toLowerCase();
+    const min = document.getElementById("fMin").value;
+    const max = document.getElementById("fMax").value;
 
+    const filtered = records.filter(r => {
+        if (g && r.grade !== g) return false;
+        if (subj && !r.subject.toLowerCase().includes(subj)) return false;
+        if (cls && r.cls.toLowerCase() !== cls) return false;
+        if (min && Number(r.marks) < Number(min)) return false;
+        if (max && Number(r.marks) > Number(max)) return false;
+        return true;
+    });
+    closeModal();
+    renderTable(filtered);
+}
+
+/* ======= Details popup ======= */
+function showDetails(){
+    if (selectedIndex < 0 || selectedIndex >= records.length) {
+        alert("Select a student row first (click a table row).");
+        return;
+    }
+    const r = records[selectedIndex];
+    overlay.style.display = "flex";
+    modalContent.innerHTML = `
+        <h3>Student Details</h3>
+        <div style="margin-bottom:10px"><strong>ID:</strong> ${escapeHTML(r.id)}</div>
+        <div style="margin-bottom:10px"><strong>Name:</strong> ${escapeHTML(r.name)}</div>
+        <div style="margin-bottom:10px"><strong>Class:</strong> ${escapeHTML(r.cls)}</div>
+        <div style="margin-bottom:10px"><strong>DOB:</strong> ${escapeHTML(r.dob)}</div>
+        <div style="margin-bottom:10px"><strong>Subject:</strong> ${escapeHTML(r.subject)}</div>
+        <div style="margin-bottom:10px"><strong>Marks:</strong> ${escapeHTML(String(r.marks))}</div>
+        <div style="margin-bottom:10px"><strong>Grade:</strong> ${escapeHTML(r.grade)}</div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+            <button class="action btn-primary" onclick="closeModal()">Close</button>
+        </div>
+    `;
+}
+
+/* ======= Print ======= */
+function printPage(){ window.print(); }
+
+/* ======= helper: reset to full table ======= */
+function showAll(){ renderTable(records); }
+
+/* ======= initial render ======= */
+renderTable();
+
+/* close modal if clicked outside modal content */
+overlay.addEventListener("click", (e) => { if (e.target === overlay) closeModal(); });
+
+</script>
 </body>
 </html>
