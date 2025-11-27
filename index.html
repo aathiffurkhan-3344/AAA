@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grades / Marks Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .row div {
+            width: 48%;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #aaa;
+        }
+
+        .buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .buttons button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+        }
+
+        .buttons button:hover {
+            background: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        table, th, td {
+            border: 1px solid #444;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background: #eee;
+            font-weight: bold;
+        }
+
+        .stats {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .search-box {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+        }
+
+        .search-box button {
+            padding: 8px 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Grades / Marks Page</h1>
+
+    <!-- Student Info Row 1 -->
+    <div class="row">
+        <div>
+            <label>Student Name:</label>
+            <input type="text" placeholder="Enter student name">
+        </div>
+
+        <div>
+            <label>Student ID:</label>
+            <input type="text" placeholder="Enter student ID">
+        </div>
+    </div>
+
+    <!-- Student Info Row 2 -->
+    <div class="row">
+        <div>
+            <label>Class:</label>
+            <input type="text" placeholder="Enter class">
+        </div>
+
+        <div>
+            <label>DOB:</label>
+            <input type="date">
+        </div>
+    </div>
+
+    <!-- Subject + Grade -->
+    <div class="row">
+        <div>
+            <label>Subject:</label>
+            <input type="text" placeholder="Enter subject">
+        </div>
+
+        <div>
+            <label>Grade:</label>
+            <input type="text" placeholder="Enter grade">
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="buttons">
+        <button>Add Grade</button>
+        <button style="background:#6c757d;">Clear</button>
+        <button style="background:#28a745;">Update</button>
+        <button style="background:#dc3545;">Delete</button>
+    </div>
+
+    <!-- Search -->
+    <div class="search-box">
+        <input type="text" placeholder="Search by student name">
+        <button>Search</button>
+    </div>
+
+    <!-- Table -->
+    <table>
+        <tr>
+            <th>Student ID</th>
+            <th>Name</th>
+            <th>Class</th>
+            <th>DOB</th>
+            <th>Subject</th>
+            <th>Grade</th>
+        </tr>
+
+        <tr>
+            <td>001</td>
+            <td>John</td>
+            <td>10A</td>
+            <td>2008-05-10</td>
+            <td>Math</td>
+            <td>A</td>
+        </tr>
+
+        <tr>
+            <td>002</td>
+            <td>Mary</td>
+            <td>10B</td>
+            <td>2008-09-20</td>
+            <td>Science</td>
+            <td>B+</td>
+        </tr>
+    </table>
+
+    <!-- Stats -->
+    <div class="stats">
+        Average Grade: B &nbsp;&nbsp;&nbsp;
+        Highest Grade: A &nbsp;&nbsp;&nbsp;
+        Lowest Grade: C
+    </div>
+
+</div>
+
+</body>
+</html>
