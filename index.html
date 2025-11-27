@@ -1,175 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Grades / Marks Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            padding: 20px;
-        }
-
-        .container {
-            width: 80%;
-            margin: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 0 12px rgba(0,0,0,0.2);
-        }
-
-        h1 {
-            text-align: center;
-            font-size: 24px;
-            margin-bottom: 30px;
-            font-weight: bold;
-        }
-
-        .row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-
-        .row div {
-            width: 48%;
-        }
-
-        label {
-            font-weight: bold;
-        }
-
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #aaa;
-        }
-
-        .buttons {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .buttons button {
-            padding: 10px 20px;
-            margin: 5px;
-            font-size: 15px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            background: #007bff;
-            color: white;
-        }
-
-        .buttons button:hover {
-            background: #0056b3;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 25px;
-        }
-
-        table, th, td {
-            border: 1px solid #444;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: center;
-        }
-
-        th {
-            background: #eee;
-            font-weight: bold;
-        }
-
-        .stats {
-            margin-top: 20px;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .search-box {
-            margin: 20px 0;
-            display: flex;
-            gap: 10px;
-        }
-
-        .search-box input {
-            flex: 1;
-        }
-
-        .search-box button {
-            padding: 8px 15px;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Grades / Marks Page</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        padding: 20px;
+    }
+    .container {
+        width: 80%;
+        margin: auto;
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 0 12px rgba(0,0,0,0.2);
+    }
+    h1 {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 30px;
+        font-weight: bold;
+    }
+    .row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    .row label {
+        width: 120px;
+    }
+    .row input {
+        flex: 1;
+        padding: 8px;
+        margin-left: 10px;
+    }
+    button {
+        padding: 10px 18px;
+        margin: 5px;
+        border: none;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .add { background: #007bff; }
+    .clear { background: gray; }
+    .update { background: green; }
+    .delete { background: red; }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #aaa;
+    }
+    th, td {
+        padding: 8px;
+        text-align: center;
+    }
+    #stats {
+        margin-top: 15px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+</style>
 </head>
 <body>
 
 <div class="container">
 
-    <h1>Grades / Marks Page</h1>
+<h1>Grades / Marks Page</h1>
 
-    <!-- Student Info Row 1 -->
-    <div class="row">
-        <div>
-            <label>Student Name:</label>
-            <input type="text" placeholder="Enter student name">
-        </div>
+<div class="row">
+    <label>Student Name:</label>
+    <input id="name">
+    <label>Student ID:</label>
+    <input id="id">
+</div>
 
-        <div>
-            <label>Student ID:</label>
-            <input type="text" placeholder="Enter student ID">
-        </div>
-    </div>
+<div class="row">
+    <label>Class:</label>
+    <input id="class">
+    <label>DOB:</label>
+    <input id="dob" type="date">
+</div>
 
-    <!-- Student Info Row 2 -->
-    <div class="row">
-        <div>
-            <label>Class:</label>
-            <input type="text" placeholder="Enter class">
-        </div>
+<div class="row">
+    <label>Subject:</label>
+    <input id="subject">
+    <label>Grade:</label>
+    <input id="grade">
+</div>
 
-        <div>
-            <label>DOB:</label>
-            <input type="date">
-        </div>
-    </div>
+<div style="text-align:center; margin-top:20px;">
+    <button class="add" onclick="addGrade()">Add Grade</button>
+    <button class="clear" onclick="clearForm()">Clear</button>
+    <button class="update" onclick="updateRow()">Update</button>
+    <button class="delete" onclick="deleteRow()">Delete</button>
+</div>
 
-    <!-- Subject + Grade -->
-    <div class="row">
-        <div>
-            <label>Subject:</label>
-            <input type="text" placeholder="Enter subject">
-        </div>
+<input id="searchBox" placeholder="Search by student name"
+       style="width:70%; padding:8px; margin-top:20px;">
+<button onclick="searchName()">Search</button>
 
-        <div>
-            <label>Grade:</label>
-            <input type="text" placeholder="Enter grade">
-        </div>
-    </div>
-
-    <!-- Buttons -->
-    <div class="buttons">
-        <button>Add Grade</button>
-        <button style="background:#6c757d;">Clear</button>
-        <button style="background:#28a745;">Update</button>
-        <button style="background:#dc3545;">Delete</button>
-    </div>
-
-    <!-- Search -->
-    <div class="search-box">
-        <input type="text" placeholder="Search by student name">
-        <button>Search</button>
-    </div>
-
-    <!-- Table -->
-    <table>
+<table id="gradesTable">
+    <thead>
         <tr>
             <th>Student ID</th>
             <th>Name</th>
@@ -178,34 +115,122 @@
             <th>Subject</th>
             <th>Grade</th>
         </tr>
+    </thead>
+    <tbody></tbody>
+</table>
 
-        <tr>
-            <td>001</td>
-            <td>John</td>
-            <td>10A</td>
-            <td>2008-05-10</td>
-            <td>Math</td>
-            <td>A</td>
-        </tr>
-
-        <tr>
-            <td>002</td>
-            <td>Mary</td>
-            <td>10B</td>
-            <td>2008-09-20</td>
-            <td>Science</td>
-            <td>B+</td>
-        </tr>
-    </table>
-
-    <!-- Stats -->
-    <div class="stats">
-        Average Grade: B &nbsp;&nbsp;&nbsp;
-        Highest Grade: A &nbsp;&nbsp;&nbsp;
-        Lowest Grade: C
-    </div>
+<div id="stats">Average Grade: - | Highest Grade: - | Lowest Grade: -</div>
 
 </div>
+
+<script>
+let selectedRow = null;
+
+function addGrade() {
+    let id = document.getElementById("id").value;
+    let name = document.getElementById("name").value;
+    let cls = document.getElementById("class").value;
+    let dob = document.getElementById("dob").value;
+    let subject = document.getElementById("subject").value;
+    let grade = document.getElementById("grade").value;
+
+    if (!id || !name || !cls || !dob || !subject || !grade) {
+        alert("Please fill all fields!");
+        return;
+    }
+
+    let table = document.getElementById("gradesTable").getElementsByTagName("tbody")[0];
+    let row = table.insertRow();
+
+    row.insertCell(0).innerHTML = id;
+    row.insertCell(1).innerHTML = name;
+    row.insertCell(2).innerHTML = cls;
+    row.insertCell(3).innerHTML = dob;
+    row.insertCell(4).innerHTML = subject;
+    row.insertCell(5).innerHTML = grade;
+
+    row.onclick = function() { selectRow(row); };
+
+    clearForm();
+    calculateStats();
+}
+
+function selectRow(row) {
+    selectedRow = row;
+    document.getElementById("id").value = row.cells[0].innerHTML;
+    document.getElementById("name").value = row.cells[1].innerHTML;
+    document.getElementById("class").value = row.cells[2].innerHTML;
+    document.getElementById("dob").value = row.cells[3].innerHTML;
+    document.getElementById("subject").value = row.cells[4].innerHTML;
+    document.getElementById("grade").value = row.cells[5].innerHTML;
+}
+
+function updateRow() {
+    if (!selectedRow) {
+        alert("Select a row first!");
+        return;
+    }
+
+    selectedRow.cells[0].innerHTML = document.getElementById("id").value;
+    selectedRow.cells[1].innerHTML = document.getElementById("name").value;
+    selectedRow.cells[2].innerHTML = document.getElementById("class").value;
+    selectedRow.cells[3].innerHTML = document.getElementById("dob").value;
+    selectedRow.cells[4].innerHTML = document.getElementById("subject").value;
+    selectedRow.cells[5].innerHTML = document.getElementById("grade").value;
+
+    clearForm();
+    calculateStats();
+}
+
+function deleteRow() {
+    if (!selectedRow) {
+        alert("Select a row first!");
+        return;
+    }
+    selectedRow.remove();
+    selectedRow = null;
+    clearForm();
+    calculateStats();
+}
+
+function clearForm() {
+    document.getElementById("id").value = "";
+    document.getElementById("name").value = "";
+    document.getElementById("class").value = "";
+    document.getElementById("dob").value = "";
+    document.getElementById("subject").value = "";
+    document.getElementById("grade").value = "";
+}
+
+function searchName() {
+    let filter = document.getElementById("searchBox").value.toLowerCase();
+    let rows = document.querySelectorAll("#gradesTable tbody tr");
+
+    rows.forEach(r => {
+        let name = r.cells[1].innerHTML.toLowerCase();
+        r.style.display = name.includes(filter) ? "" : "none";
+    });
+}
+
+function calculateStats() {
+    let rows = document.querySelectorAll("#gradesTable tbody tr");
+    if (rows.length === 0) {
+        document.getElementById("stats").innerHTML =
+            "Average Grade: - | Highest Grade: - | Lowest Grade: -";
+        return;
+    }
+
+    let grades = [];
+
+    rows.forEach(r => grades.push(r.cells[5].innerHTML));
+
+    let sorted = grades.slice().sort();
+    let avgLetter = grades[Math.floor(grades.length/2)];
+
+    document.getElementById("stats").innerHTML =
+        `Average Grade: ${avgLetter} | Highest Grade: ${sorted[0]} | Lowest Grade: ${sorted[sorted.length-1]}`;
+}
+</script>
 
 </body>
 </html>
